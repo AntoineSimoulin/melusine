@@ -15,8 +15,9 @@ class MetaExtension(BaseEstimator, TransformerMixin):
     Compatible with scikit-learn API.
     """
 
-    def __init__(self):
+    def __init__(self, topn_extension=100):
         self.le_extension = preprocessing.LabelEncoder()
+        self.topn_extension = topn_extension
 
     def fit(self, X, y=None):
 
@@ -62,11 +63,10 @@ class MetaExtension(BaseEstimator, TransformerMixin):
             return ""
         return extension
 
-    @staticmethod
-    def get_top_extension(X, n=100):
+    def get_top_extension(self, X):
         "Returns list of most common extensions."
         a = Counter(X["extension"].values)
-        a = a.most_common(n)
+        a = a.most_common(self.topn_extension)
         a = [x[0] for x in a]
         return a
 
@@ -287,8 +287,9 @@ class MetaAttachmentType(BaseEstimator, TransformerMixin):
     Compatible with scikit-learn API.
     """
 
-    def __init__(self):
+    def __init__(self, topn_extension=100):
         self.le_extension = preprocessing.LabelEncoder()
+        self.topn_extension = topn_extension
 
     def fit(self, X, y=None):
 
@@ -343,12 +344,11 @@ class MetaAttachmentType(BaseEstimator, TransformerMixin):
             return ""
         return attached_types
 
-    @staticmethod
-    def get_top_attachment_type(X, n=100):
+    def get_top_attachment_type(self, X):
         "Returns list of most common types of attachment."
 
         type_counter = Counter(chain(*X["attachment_type"]))
-        type_counter = type_counter.most_common(n)
+        type_counter = type_counter.most_common(self.topn_extension)
         top_attachment_type = [x[0] for x in type_counter]
         return top_attachment_type
 
